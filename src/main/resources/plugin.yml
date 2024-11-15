@@ -1,0 +1,4 @@
+name: HusktownsPrevent
+version: $version
+main: org.windy.husktownsPrevent.HusktownsPrevent
+api-version: '1.20'

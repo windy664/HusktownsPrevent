@@ -1,0 +1,15 @@
+disabledItems:
+  - CREATE_WRENCH
+  - POWAH_WRENCH
+  - TECHREBORN_WRENCH
+  - AE2_CERTUS_QUARTZ_WRENCH
+  - AE2_NETHER_QUARTZ_WRENCH
+  - ADVANCED_REBORN_CONFIG_WRENCH
+  - INDREV_WRENCH
+  - MODERN_INDUSTRIALIZATION_WRENCH
+
+messages: "&8[&c✘&8] &f你没有权限在这个城镇使用这个扳手！"
+
+debug: true
+commands:
+  spawn: "huskhomes:spawn %player_name%"
