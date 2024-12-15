@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -60,14 +61,14 @@ public final class HusktownsPrevent extends JavaPlugin implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        // 判断玩家是否进入城镇区域
+
         String notprvent = PlaceholderAPI.setPlaceholders(player, "%husktowns_current_location_can_open_containers%");
 
-        if (notprvent.equals("no")) {  // 玩家进入城镇
+        if (notprvent.equals("no")) {
             // 获取玩家手持的物品
             ItemStack heldItem = player.getInventory().getItemInMainHand();
             if (heldItem != null && isItemDisabled(heldItem.getType())) {
-                // 如果玩家手持禁用物品，掉落该物品
+
                 player.getWorld().dropItem(player.getLocation(), heldItem);  // 将禁用物品掉落在玩家当前位置
                 player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));  // 清空玩家的手持物品
                 sendActionBar(player,cannotUseItem);
@@ -121,6 +122,24 @@ public final class HusktownsPrevent extends JavaPlugin implements Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         player.sendMessage("你携带了禁用物品，已被传送回 spawn！");
         moveCancelCountMap.put(player, 0); // 重置取消计数
+    }
+    @EventHandler
+    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+        Player player = event.getPlayer();
+        ItemStack newItem = player.getInventory().getItemInMainHand(); // 获取玩家主手中的物品
+        String notprvent = PlaceholderAPI.setPlaceholders(player, "%husktowns_current_location_can_open_containers%");
+        log(notprvent);
+
+        if (player.isOp()) {
+            return;
+        }
+
+        if (newItem != null && isItemDisabled(newItem.getType()) && notprvent.equals("no")) {
+            event.setCancelled(true);
+            if (cannotUseItem != null) {
+                sendActionBar(player, cannotUseItem);
+            }
+        }
     }
 
     @Override
